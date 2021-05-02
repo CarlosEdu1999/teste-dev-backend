@@ -3,8 +3,11 @@ package models;
 
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.sql.Array;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.sql.Connection;
 
 
 public class Client implements Serializable {
@@ -13,11 +16,11 @@ public class Client implements Serializable {
     private String name;
     private String birthDate;
     private String gender;
-    private ArrayList<String> healthIssues;
+    private HealthIssues healthIssues;
     private final Date dateOfCreation = new Date();
     private Date dateOfUpdate = new Date();
 
-    public Client(String name, String birthDate, String gender, ArrayList<String> healthIssues) {
+    public Client(String name, String birthDate, String gender, HealthIssues healthIssues) {
         this.name = name;
         this.birthDate = birthDate;
         this.gender = gender;
@@ -48,11 +51,12 @@ public class Client implements Serializable {
         this.name = name;
     }
 
-    public ArrayList<String> getHealthIssues() {
+    public HealthIssues getHealthIssues() {
         return healthIssues;
+
     }
 
-    public void setHealthIssues(ArrayList<String> healthIssues) {
+    public void setHealthIssues(HealthIssues healthIssues) {
         this.healthIssues = healthIssues;
     }
 
