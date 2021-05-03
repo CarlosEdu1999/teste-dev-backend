@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.springframework.web.bind.annotation.*;
 import services.ClientService;
@@ -14,9 +15,10 @@ import services.ClientService;
 
 @RestController
 //Mapeia as requisições de localhost:8080/person/
-@RequestMapping("/client/")
+@RequestMapping("/api/client")
 public class ClientController {
 
+    private static final Logger logger =Logger.getLogger(ClientController.class.toString());
     @Autowired
     private ClientService ClientService;
 

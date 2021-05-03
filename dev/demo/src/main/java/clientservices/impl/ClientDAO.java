@@ -2,6 +2,7 @@ package clientservices.impl;
 
 import models.Client;
 import models.HealthIssues;
+
 import org.springframework.stereotype.Service;
 import services.ClientService;
 import models.ConnectionFactory;

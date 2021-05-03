@@ -1,6 +1,6 @@
 package models;
 
-import ch.qos.logback.core.read.ListAppender;
+
 import models.Client;
 
 import java.util.ArrayList;
