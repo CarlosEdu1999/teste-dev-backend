@@ -2,11 +2,9 @@ package clientservices.impl;
 
 import models.Client;
 import models.HealthIssues;
-import org.springframework.data.relational.core.sql.TrueCondition;
 import org.springframework.stereotype.Service;
 import services.ClientService;
 import models.ConnectionFactory;
-import services.ClientService;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -141,7 +139,7 @@ public class ClientDAO implements ClientService {
 
     // 2 - Inserção
     @Override
-    public void create(Client client) {
+    public Client create(Client client) {
         try (Connection conn = ConnectionFactory.getConnection()) {
             int holder;
             List<String> list;
@@ -201,6 +199,7 @@ public class ClientDAO implements ClientService {
             System.out.println("Inserção FALHOU!");
             e.printStackTrace();
         }
+        return client;
     }
 
     // 3 - Delete
@@ -231,7 +230,7 @@ public class ClientDAO implements ClientService {
 
     // 4 - Atualizar
     @Override
-    public void update(Client client) {
+    public Client update(Client client) {
         try (Connection conn = ConnectionFactory.getConnection()) {
             java.sql.Date dataSql;
             java.sql.Date dataSql2;
@@ -256,6 +255,7 @@ public class ClientDAO implements ClientService {
             System.out.println("Atualização FALHOU!");
             e.printStackTrace();
         }
+        return client;
     }
 
 }
