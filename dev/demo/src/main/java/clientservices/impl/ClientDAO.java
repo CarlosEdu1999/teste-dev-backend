@@ -12,21 +12,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+
+
 public class ClientDAO implements ClientService {
+
+
 
     // 1 - Consulta
     @Override
-    public List<Client> findAll() {
+    public  List<Client> findAll() {
         //Preparar lista que irá retornar clients após consultar o banco de dados;
         List<Client> clients = new ArrayList<>();
         String name = new String();
         String name2 = new String();
         String lastname = new String();
         HealthIssues healthIssues = new HealthIssues();
-        Date birthDate = new Date(null);
+        Date birthDate = new Date();
         String gender = new String();
-        Date dateOfCreation = new Date(null);
-        Date dateOfUpdate = new Date(null) ;
+        Date dateOfCreation = new Date();
+        Date dateOfUpdate = new Date() ;
         Boolean verifier = Boolean.FALSE;
         try (Connection conn = ConnectionFactory.getConnection()) {
             //Preparar consulta SQL.
