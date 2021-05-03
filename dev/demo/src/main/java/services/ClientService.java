@@ -4,9 +4,9 @@ import models.Client;
 import java.util.List;
 
 public interface ClientService {
-    Client create(final Client client);
-    Client getByName(final Integer client);
+    void create(final Client client);
+    Client getByName(final String client);
     List<Client> findAll();
     void update(Client client);
-    void delete(final Integer ID);
+    void delete(final String name);
 }

@@ -14,16 +14,18 @@ public class Client implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String name;
-    private String birthDate;
+    private Date birthDate;
     private String gender;
     private HealthIssues healthIssues;
-    private final Date dateOfCreation = new Date();
+    private  Date dateOfCreation = new Date();
     private Date dateOfUpdate = new Date();
 
-    public Client(String name, String birthDate, String gender, HealthIssues healthIssues) {
+    public Client(String name, Date birthDate, String gender, HealthIssues healthIssues,Date dateOfCreation,Date dateOfUpdate) {
         this.name = name;
         this.birthDate = birthDate;
         this.gender = gender;
+        this.dateOfCreation = dateOfCreation;
+        this.dateOfUpdate = dateOfUpdate;
         this.healthIssues = healthIssues;
     }
 
@@ -35,11 +37,11 @@ public class Client implements Serializable {
         this.gender = gender;
     }
 
-    public String getBirthDate() {
+    public Date getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -71,8 +73,9 @@ public class Client implements Serializable {
     public void setDateOfUpdate(Date dateOfUpdate) {
         this.dateOfUpdate = dateOfUpdate;
     }
+    public void setDateOfCreation(Date dateOfCreation) {
+        this.dateOfCreation = dateOfCreation;
+    }
 }
-
-
 
 
