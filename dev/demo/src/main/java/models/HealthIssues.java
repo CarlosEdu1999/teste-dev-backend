@@ -1,12 +1,17 @@
 package models;
 
+import ch.qos.logback.core.read.ListAppender;
 import models.Client;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HealthIssues {
 
-    private List<String> healthIssuesList;
+
+    private List<String> healthIssuesList = new ArrayList<>();
+
 
 
 

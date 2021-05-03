@@ -2,6 +2,8 @@ package clientservices.impl;
 
 import models.Client;
 import models.HealthIssues;
+import org.springframework.data.relational.core.sql.TrueCondition;
+import org.springframework.stereotype.Service;
 import services.ClientService;
 import models.ConnectionFactory;
 import services.ClientService;
@@ -10,10 +12,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
 
 
-
+@Service
 public class ClientDAO implements ClientService {
 
 
@@ -23,14 +26,14 @@ public class ClientDAO implements ClientService {
     public  List<Client> findAll() {
         //Preparar lista que irá retornar clients após consultar o banco de dados;
         List<Client> clients = new ArrayList<>();
-        String name = new String();
+        String name = "A";
         String name2 = new String();
-        String lastname = new String();
+        String lastname = "A";
         HealthIssues healthIssues = new HealthIssues();
-        Date birthDate = new Date();
+        LocalDate birthDate ;
         String gender = new String();
-        Date dateOfCreation = new Date();
-        Date dateOfUpdate = new Date() ;
+        LocalDate dateOfCreation  ;
+        LocalDate dateOfUpdate ;
         Boolean verifier = Boolean.FALSE;
         try (Connection conn = ConnectionFactory.getConnection()) {
             //Preparar consulta SQL.
@@ -49,34 +52,38 @@ public class ClientDAO implements ClientService {
             //Criar um objeto client e guardar na lista de clients.
             while(rs.next()){
 
+                if (lastname!= rs.getString("name")) {
+                    healthIssues = new HealthIssues();
+                }
 
-                if (name != lastname){
-                    name2  = rs.getString("name");
-                    if (name2!=name){
-                        clients.add(new Client(
+                    name = rs.getString("name");
+                    birthDate = rs.getDate("birth_date").toLocalDate();
+                    gender = rs.getString("gender");
+                    dateOfCreation = rs.getDate("date_of_creation").toLocalDate();
+                    dateOfUpdate = rs.getDate("date_of_update").toLocalDate();
+                    healthIssues.addToList(rs.getString("issue"),rs.getInt("issue_degree"));
+                    lastname = rs.getString("name");
+
+
+
+                    clients.add(new Client(
                                 name,
                                 birthDate,
                                 gender,
                                 healthIssues,
                                 dateOfCreation,
                                 dateOfUpdate));
-                        healthIssues = new HealthIssues();
-                        lastname = name;
-                }
-                }
 
 
-
-                if(name== lastname){
-                    name = rs.getString("nome");
-                    birthDate = rs.getDate("data_de_nascimento");
-                    gender = rs.getString("sexo");
-                    dateOfCreation = rs.getDate("nome_doenca");
-                    dateOfUpdate = rs.getDate("date_of_update");
-                    healthIssues.addToList(rs.getString("issue"),rs.getInt("issue_degree"));
                 }
 
-            }
+
+
+
+
+
+
+
         } catch (SQLException e) {
             System.out.println("Listagem de clients FALHOU!");
             e.printStackTrace();
@@ -116,10 +123,10 @@ public class ClientDAO implements ClientService {
                 healthIssues.addToList(rs.getString("issue"),rs.getInt("issue_degree"));
                 client.setName(rs.getString("name"));
                 client.setGender(rs.getString("gender"));
-                client.setBirthDate(rs.getDate("birth_date"));
-                client.setDateOfUpdate(rs.getDate("date_of_update"));
+                client.setBirthDate(rs.getDate("birth_date").toLocalDate());
+                client.setDateOfUpdate(rs.getDate("date_of_update").toLocalDate());
                 client.setHealthIssues(healthIssues);
-                client.setDateOfCreation(rs.getDate("date_of_creation"));
+                client.setDateOfCreation(rs.getDate("date_of_creation").toLocalDate());
 
             }
 
@@ -136,42 +143,56 @@ public class ClientDAO implements ClientService {
     @Override
     public void create(Client client) {
         try (Connection conn = ConnectionFactory.getConnection()) {
-            String holder;
+            int holder;
             List<String> list;
             Iterator<String> itr;
             //Preparar SQL para inserção de dados do client.
             String sql = "INSERT INTO client (name,birth_date,gender,date_of_creation,date_of_update)\n" +
-                    "VALUES ('?',?,'?',?,?);\n";
-
-
+                    "VALUES (?,?,?,?,?);\n";
+            java.sql.Date dataSql;
+            java.sql.Date dataSql2;
+            java.sql.Date dataSql3;
             //Preparar statement com os parâmetros recebidos
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1 , client.getName());
-            stmt.setDate(2 , (java.sql.Date) client.getBirthDate());
+            stmt.setDate(2 , dataSql= java.sql.Date.valueOf(client.getBirthDate()) );
             stmt.setString(3 , client.getGender());
-            stmt.setDate(4, (java.sql.Date) client.getDateOfCreation());
-            stmt.setDate(5, (java.sql.Date) client.getDateOfUpdate());
+            stmt.setDate(4, dataSql2= java.sql.Date.valueOf(client.getDateOfCreation()));
+            stmt.setDate(5, dataSql3= java.sql.Date.valueOf(client.getDateOfUpdate()));
 
 
             int rowsAffected = stmt.executeUpdate();
-            String sql2 = "insert into health_issues (client_name , issue , issue_degree)\n" +
-                    "    values('?','?',1);\n";
 
-            String[] A = client.getHealthIssues().getHealthIssuesList().get(0).split(",");
+
+            int b=-1;
 
             list= client.getHealthIssues().getHealthIssuesList();
             itr = list.listIterator();
             while(itr.hasNext()) {
+                String sql2 = "insert into health_issues (client_name , issue , issue_degree)\n" +
+                        "    values(?,?,?);\n";
+
+
+
+                b++;
+                String[] A = client.getHealthIssues().getHealthIssuesList().get(b).split(",");
+
+                System.out.println(b);
+
                 if (A[1].endsWith("1")) {
-                    holder = "1";
+                    holder = 1;
                 } else {
-                    holder = "2";
+                    holder = 2;
                 }
 
+                System.out.println("1loop");
                 PreparedStatement stmt2 = conn.prepareStatement(sql2);
                 stmt2.setString(1, client.getName());
                 stmt2.setString(2, A[0]);
-                stmt2.setString(3, holder);
+                stmt2.setInt(3, holder);
+                stmt2.execute();
+
+                itr.next();
             }
 
 
@@ -188,9 +209,10 @@ public class ClientDAO implements ClientService {
         try (Connection conn = ConnectionFactory.getConnection()) {
 
             //Preparar SQL para deletar uma linha.
-            String sql = "delete from client where name = ?\n" +
-                    "   delete from health_issues  where name = ?\n" +
-                    "   ";
+            String sql = "delete from health_issues  where client_name = ?;\n" +
+                    "delete from client where name = ?;\n" ;
+
+
 
             //Preparar statement com os parâmetros recebidos
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -211,18 +233,21 @@ public class ClientDAO implements ClientService {
     @Override
     public void update(Client client) {
         try (Connection conn = ConnectionFactory.getConnection()) {
-
+            java.sql.Date dataSql;
+            java.sql.Date dataSql2;
+            java.sql.Date dataSql3;
             //Preparar SQL para atualizar linhas.
-            String sql = "  update client set name = ? , birth_date = ? , gender = ? , date_of_creation = ? , date_of_update = ?";
+            String sql = "  update client \nset name = ? , birth_date = ? , gender = ? , date_of_creation = ? , date_of_update = ?\n"+
+                    "where name = ?";
             Date newdate = new Date();
             //Preparar statement com os parâmetros recebidos
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, client.getName());
-            stmt.setDate(2, (java.sql.Date) client.getBirthDate());
+            stmt.setDate(2, dataSql= java.sql.Date.valueOf(client.getBirthDate()));
             stmt.setString(3, client.getGender());
-            stmt.setDate(4, (java.sql.Date) client.getDateOfCreation());
-            stmt.setDate(5, (java.sql.Date) newdate);
-
+            stmt.setDate(4, dataSql2= java.sql.Date.valueOf(client.getDateOfCreation()));
+            stmt.setDate(5,dataSql3= java.sql.Date.valueOf(client.getDateOfUpdate()));
+            stmt.setString(6, client.getName());
             //Executa atualização e armazena o numero de linhas afetadas
             int rowsAffected = stmt.executeUpdate();
 

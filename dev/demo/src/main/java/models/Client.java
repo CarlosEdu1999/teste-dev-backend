@@ -4,6 +4,7 @@ package models;
 
 import java.io.Serializable;
 import java.sql.Array;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -14,13 +15,13 @@ public class Client implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String name;
-    private Date birthDate;
+    private LocalDate birthDate;
     private String gender;
     private HealthIssues healthIssues;
-    private  Date dateOfCreation = new Date();
-    private Date dateOfUpdate = new Date();
+    private LocalDate dateOfCreation = LocalDate.now();
+    private LocalDate dateOfUpdate = LocalDate.now();
 
-    public Client(String name, Date birthDate, String gender, HealthIssues healthIssues,Date dateOfCreation,Date dateOfUpdate) {
+    public Client(String name, LocalDate birthDate, String gender, HealthIssues healthIssues,LocalDate dateOfCreation,LocalDate dateOfUpdate) {
         this.name = name;
         this.birthDate = birthDate;
         this.gender = gender;
@@ -37,11 +38,11 @@ public class Client implements Serializable {
         this.gender = gender;
     }
 
-    public Date getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -62,18 +63,18 @@ public class Client implements Serializable {
         this.healthIssues = healthIssues;
     }
 
-    public Date getDateOfCreation() {
+    public LocalDate getDateOfCreation() {
         return dateOfCreation;
     }
 
-    public Date getDateOfUpdate() {
+    public LocalDate getDateOfUpdate() {
         return dateOfUpdate;
     }
 
-    public void setDateOfUpdate(Date dateOfUpdate) {
+    public void setDateOfUpdate(LocalDate dateOfUpdate) {
         this.dateOfUpdate = dateOfUpdate;
     }
-    public void setDateOfCreation(Date dateOfCreation) {
+    public void setDateOfCreation(LocalDate dateOfCreation) {
         this.dateOfCreation = dateOfCreation;
     }
 }
